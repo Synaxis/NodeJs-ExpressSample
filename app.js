@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
-
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
 mongoose.connect('mongodb://localhost/nodekb');
 let db = mongoose.connection;
 
@@ -19,16 +20,24 @@ db.on('error', function(){
 const app = express();
 
 //Bring in Models
-let Art = require('./models/article');
+let Article = require('./models/article');
 
 //Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+//Body parser application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
+//Public folder calling "rring rring"
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Home route
 app.get('/', function(req, res){
-    Art.find({}, function(err, articles){
+    Article.find({}, function(err, articles){
         if(err){
             console.log(err);
         } else{
@@ -37,6 +46,14 @@ app.get('/', function(req, res){
             articles: articles
         });
     }});
+});
+
+// Get Single Article
+app.get('/article/:id', function(req, res){
+    Article.findById(req.params.id, function(err, article){
+        console.log(article);
+        return;
+    });
 });
 
 //Add Route
@@ -53,12 +70,22 @@ app.get('/articles/add', function(req, res){
     });
 });
 
+//this needs refacotr
 //Add Submit-btn POST Route
 app.post('/articles/add', function(req,res){
-    //let article = new article();
-    //article.title = req.body.title;
-    console.log(req.body.title);
-    return;    
+    let article = new Article();
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+    
+    article.save(function(err){
+        if(err){
+            console.log(err);
+            return;
+        } else {
+            res.redirect('/');
+        }
+    });
 });
 
 //Start Server
