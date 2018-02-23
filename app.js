@@ -1,6 +1,19 @@
 const express = require('express');
 const path = require('path');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/nodekb');
+let db = mongoose.connection;
+
+//check DB connection
+db.once('open', function(){
+    console.log('Connected to MongoDB');
+});
+
+//Check for DB issues
+db.on('error', function(){
+    console.log(err);
+});
 
 //Init app
 const app = express();
