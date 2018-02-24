@@ -3,6 +3,7 @@ html
   head
     title Knowledgebase
     link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet' href='/css/style.css')
   body
     nav.navbar.navbar-inverse
       .container
@@ -20,8 +21,16 @@ html
             if user
               li
                 a(href='/articles/add') Add Article
-          ul.nav.navbar-nav.navbar-right           
-    .container      
+          ul.nav.navbar-nav.navbar-right
+            if user
+              li 
+                a(href='/users/logout') Logout
+            else
+              li
+                a(href='/users/register') Register
+              li
+                a(href='/users/login') Login
+    .container     
       block content
       br
       hr

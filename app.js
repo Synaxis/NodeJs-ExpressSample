@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-//Public folder calling "rring rring"
+//Public folder calling
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Home route
@@ -51,8 +51,7 @@ app.get('/', function(req, res){
 // Get Single Article
 app.get('/article/:id', function(req, res){
     Article.findById(req.params.id, function(err, article){
-        console.log(article);
-        return;
+      
     });
 });
 
